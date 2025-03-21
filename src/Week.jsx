@@ -2,39 +2,48 @@ import React, { useState, useEffect } from "react";
 import calendar from "./calendor.json";
 import Task from "./Task";
 
-// Utility function to get the start and end date of the current week
 const getStartAndEndOfWeek = (date) => {
   const currentDate = new Date(date);
-  const day = currentDate.getDay(); // Get the day of the week (0-6)
+  const day = currentDate.getDay();
   const startDate = new Date(currentDate);
   const endDate = new Date(currentDate);
 
-  // Calculate the start of the week (Sunday)
   startDate.setDate(currentDate.getDate() - day);
 
-  // Calculate the end of the week (Saturday)
   endDate.setDate(currentDate.getDate() + (6 - day));
 
   return { startDate, endDate };
 };
 
-// Utility function to format date as "DD MMM"
 const formatDate = (date) => {
   const options = {
-    day: "numeric", // Keeps day as a number (e.g., 17)
-    month: "short", // Shortens the month to three letters (e.g., Mar)
-    year: "numeric", // Keeps the year as a full number (e.g., 2025)
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   };
 
   return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
 };
 
+const convertTo24HourFormat = (time) => {
+  const [hourMinute, period] = time.split(" ");
+  let [hour, minute] = hourMinute.split(":").map(Number);
+
+  if (period === "PM" && hour !== 12) {
+    hour += 12;
+  }
+  if (period === "AM" && hour === 12) {
+    hour = 0;
+  }
+
+  return new Date(1970, 0, 1, hour, minute);
+};
+
 const Week = ({ operation }) => {
-  const [currentWeek, setCurrentWeek] = useState(new Date()); // Current date for week view
+  const [currentWeek, setCurrentWeek] = useState(new Date());
   const [days, setDays] = useState([]);
 
   useEffect(() => {
-    // Get the start and end of the week based on the current date
     const { startDate, endDate } = getStartAndEndOfWeek(currentWeek);
     const newDays = [];
 
@@ -46,8 +55,7 @@ const Week = ({ operation }) => {
         day: day.toLocaleString("en-US", { weekday: "long" }),
       });
     }
-    setDays(newDays); // Update the days of the week
-    console.log(newDays);
+    setDays(newDays);
   }, [currentWeek]);
 
   const times = [
@@ -80,11 +88,11 @@ const Week = ({ operation }) => {
   useEffect(() => {
     if (operation < 0) {
       const prevWeek = new Date(currentWeek);
-      prevWeek.setDate(currentWeek.getDate() - 7); // Go back 7 days
+      prevWeek.setDate(currentWeek.getDate() - 7);
       setCurrentWeek(prevWeek);
     } else if (operation > 0) {
       const nextWeek = new Date(currentWeek);
-      nextWeek.setDate(currentWeek.getDate() + 7); // Go forward 7 days
+      nextWeek.setDate(currentWeek.getDate() + 7);
       setCurrentWeek(nextWeek);
     }
   }, [operation]);
@@ -123,11 +131,23 @@ const Week = ({ operation }) => {
                   key={dayIndex}
                   className="w-[12.14%] border-r border-gray-300 h-24"
                 >
-                  {calendar.filter(
-                    (data) =>
-                      String(data.time.slice(0, 8)) === time &&
-                      data.date === _.date
-                  ).length > 0 && <Task />}
+                  {calendar
+                    .filter((data) => {
+                      const [startTime, endTime] = data.time.split(" - ");
+                      const startDate = convertTo24HourFormat(startTime);
+                      const endDate = convertTo24HourFormat(endTime);
+
+                      const currentTime = convertTo24HourFormat(time);
+
+                      return (
+                        currentTime >= startDate &&
+                        currentTime <= endDate &&
+                        data.date === _.date
+                      );
+                    })
+                    .map((data) => (
+                      <Task key={data.id} taskData={data} />
+                    ))}
                 </div>
               );
             })}
