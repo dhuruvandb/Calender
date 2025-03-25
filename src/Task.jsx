@@ -1,46 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import jobData from "./calendor.json";
 const JobCard = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [selectTask, setSelectTask] = useState(null);
-  let jobData = [
-    {
-      id: 2,
-      jobTitle: "Nextjs Developer",
-      interviewer: "Ravi Kumar",
-      time: "09:00 PM - 09:50 PM",
-      round: "1st Round",
-      via: "Google Meet",
-      date: "21 Mar 2025",
-      resume: "Resume.docx",
-      adhaarCard: "Aadhar Card",
-      image: "your-image-url",
-    },
-    {
-      jobTitle: "Node Developer",
-      interviewer: "Anjali",
-      time: "10:00 PM - 10:50 PM",
-      round: "3rd Round",
-      date: "22 Mar 2025",
-      id: 3,
-      via: "Google Meet",
-      resume: "Resume.docx",
-      adhaarCard: "Aadhar Card",
-      image: "your-image-url",
-    },
-    {
-      id: 1,
-      jobTitle: "Django Developer",
-      interviewer: "Vinodhini",
-      time: "08:00 PM - 08:50 PM",
-      date: "21 Mar 2025",
-      via: "Google Meet",
-      round: "2nd Round",
-      resume: "Resume.docx",
-      adhaarCard: "Aadhar Card",
-      image: "your-image-url",
-    },
-  ];
 
   const popupRef = useRef(null);
 

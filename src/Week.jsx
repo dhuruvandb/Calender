@@ -99,7 +99,7 @@ const Week = ({ operation }) => {
 
   return (
     <div className="p-4">
-      <div className="flex border-t border-gray-300 scrollbar-none">
+      <div className="flex border-t border-gray-300">
         <div className="w-[15%] border-r border-gray-300 p-4 text-lg font-semibold">
           Time
         </div>
@@ -113,13 +113,7 @@ const Week = ({ operation }) => {
         ))}
       </div>
 
-      <ul
-        className="overflow-auto h-[400px] scrollbar-none p-0"
-        style={{
-          overflowY: "scroll",
-          scrollbarWidth: "none",
-        }}
-      >
+      <ul className="overflow-auto h-[400px]">
         {times.map((time, index) => (
           <li key={index} className="flex border-t border-gray-300">
             <div className="w-[15%] border-r border-gray-300 flex justify-center items-end text-lg text-[blue] h-24">
