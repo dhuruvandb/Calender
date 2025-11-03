@@ -20,3 +20,16 @@ for connection in self.active_connections:
 await connection.send_text(json.dumps(message))
  
 manager = ConnectionsManagers()
+ 
+@app.websocket('/ws')
+async def websocket_endpoint(websocket:WebSocket):
+await manager.connect(websocket)
+try:
+while True:
+data = await websocket.receive_text()
+message = json.loads(data)
+ 
+await manager.boardcast(message)
+ 
+except:
+manager.disconnect(websocket)
