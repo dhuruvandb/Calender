@@ -33,7 +33,12 @@ await manager.boardcast(message)
  
 except:
 manager.disconnect(websocket)
- 
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
